@@ -1,0 +1,35 @@
+import prisma from '../src/utils/prisma';
+
+async function main() {
+  const stuckTickets = await prisma.ticket.findMany({
+    where: {
+      current_phase: 'proof',
+      ticket_type: {
+        in: ['create', 'extend', 'inactive']
+      }
+    }
+  });
+
+  console.log('Found ' + stuckTickets.length + ' stuck tickets.');
+
+  for (const ticket of stuckTickets) {
+    await prisma.$transaction(async (tx) => {
+      await tx.ticket.update({
+        where: { id: ticket.id },
+        data: { current_phase: 'confirmation' }
+      });
+
+      await tx.ticketHistory.create({
+        data: {
+          ticket_id: ticket.id,
+          phase: 'proof',
+          action: 'proof_auto',
+          description: 'System Auto Proof for ' + ticket.ticket_type
+        }
+      });
+    });
+    console.log('Forwarded ticket: ' + ticket.ticket_number);
+  }
+}
+
+main().catch(console.error).finally(() => prisma.$disconnect());
