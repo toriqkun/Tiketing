@@ -26,7 +26,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/tickets", ticketRoutes);
 app.use("/api/v1/accounts", accountRoutes);
-app.use("/api//dashboard", dashboardRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 app.use(errorHandler);
 
