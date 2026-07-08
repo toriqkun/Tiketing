@@ -7,7 +7,7 @@ const router = Router();
 router.use(requireAuth);
 
 router.get(
-  "/dashboard/summary",
+  "/summary",
   dashboardController.getSummary.bind(dashboardController),
 );
 

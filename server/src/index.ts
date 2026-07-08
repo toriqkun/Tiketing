@@ -23,10 +23,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
-app.use("/api/v1", authRoutes);
-app.use("/api/v1", ticketRoutes);
-app.use("/api/v1", accountRoutes);
-app.use("/api/v1", dashboardRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/tickets", ticketRoutes);
+app.use("/api/v1/accounts", accountRoutes);
+app.use("/api//dashboard", dashboardRoutes);
 
 app.use(errorHandler);
 
