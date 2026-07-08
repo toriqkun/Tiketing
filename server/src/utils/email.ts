@@ -1,7 +1,35 @@
 import nodemailer from 'nodemailer';
 
 export const sendEmail = async (to: string, subject: string, text: string) => {
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM, RESEND_API_KEY } = process.env;
+
+  if (RESEND_API_KEY) {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: SMTP_FROM || 'Tiketing System <onboarding@resend.dev>',
+          to: [to],
+          subject: subject,
+          text: text,
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(JSON.stringify(errorData));
+      }
+      return;
+    } catch (error) {
+      console.error('Failed to send email via Resend API, falling back to console:', error);
+      console.log(`[EMAIL FALLBACK] To: ${to}\nSubject: ${subject}\nText:\n${text}`);
+      return;
+    }
+  }
 
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
     console.log('--------------------------------------------------');
