@@ -98,7 +98,7 @@ export class TicketController {
       
       const payload = { ...req.body };
       if (req.file) {
-        payload.proof_image = `/uploads/${req.file.filename}`;
+        payload.proof_image = req.file.path; // Cloudinary returns the full URL in path
       }
       
       const ticket = await ticketService.proofTicket(req.params.id as string, req.user!.id, payload);
