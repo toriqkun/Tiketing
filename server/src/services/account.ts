@@ -26,7 +26,15 @@ export class AccountService {
     
     // Convert effective_time and expired_time to Date if provided
     if (updateData.effective_time) updateData.effective_time = new Date(updateData.effective_time);
-    if (updateData.expired_time) updateData.expired_time = new Date(updateData.expired_time);
+    if (updateData.expired_time) {
+      const newExp = new Date(updateData.expired_time);
+      updateData.expired_time = newExp;
+      
+      // If admin manually extends expired_time to a future date, auto-activate the account
+      if (newExp.getTime() > target.expired_time.getTime() && newExp.getTime() > new Date().getTime()) {
+        updateData.status = 'activated';
+      }
+    }
 
     return accountRepository.executeAccountTransaction(async (tx) => {
       const updated = await accountRepository.updateAccount(accountId, updateData, tx);

@@ -36,7 +36,10 @@ export class TicketService {
           const now = new Date().getTime();
           const baseDate = currentExp > now ? new Date(target.expired_time) : new Date();
           baseDate.setMonth(baseDate.getMonth() + 1);
-          await accountRepository.updateAccount(target.id, { expired_time: baseDate }, tx);
+          await accountRepository.updateAccount(target.id, { 
+            expired_time: baseDate,
+            status: 'activated'
+          }, tx);
 
           sendEmail(
             target.email,
