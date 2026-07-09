@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getTicketById } from "../lib/ticket.service";
+import { API_BASE_URL } from "../lib/apiClient";
 import TicketActionPanel from "../components/TicketActionPanel";
 
 export default function TicketDetailPage() {
@@ -245,9 +246,9 @@ export default function TicketDetailPage() {
                       <div>
                         <h4 className="text-gray-700 text-sm mb-2">Evidence</h4>
                         {h.proof_image ? (
-                          <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${h.proof_image}`} target="_blank" rel="noreferrer" className="block w-fit">
+                          <a href={`${API_BASE_URL.replace('/api/v1', '')}${h.proof_image}`} target="_blank" rel="noreferrer" className="block w-fit">
                             <img 
-                              src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${h.proof_image}`} 
+                              src={`${API_BASE_URL.replace('/api/v1', '')}${h.proof_image}`} 
                               alt="Proof Evidence" 
                               className="max-h-40 object-contain border border-gray-200 rounded shadow-sm hover:opacity-80 transition cursor-pointer"
                             />
